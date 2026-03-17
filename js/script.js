@@ -7,6 +7,7 @@ mobileMenu.addEventListener('click', () => {
     navMenu.classList.toggle('active');
 });
 
+
 // Close mobile menu when clicking on a link
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {
@@ -16,6 +17,30 @@ navLinks.forEach(link => {
     });
 });
 
+const themeToggle = document.getElementById('theme-toggle');
+
+const getStoredTheme = () => localStorage.getItem('theme');
+const getDefaultTheme = () => (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+const currentTheme = getStoredTheme() || getDefaultTheme();
+
+const applyTheme = (theme) => {
+  document.documentElement.setAttribute('data-theme', theme);
+  if (themeToggle) {
+    themeToggle.innerHTML = theme === 'dark'
+  ? '<i class="fas fa-sun"></i>'
+  : '<i class="fas fa-moon"></i>';
+  }
+  localStorage.setItem('theme', theme);
+};
+
+applyTheme(currentTheme);
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+}
 // Smooth scrolling for navigation links
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -236,3 +261,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize any other components
     console.log('Portfolio website initialized successfully!');
 });
+// Mouse Glow Effect
+const glow = document.querySelector('.cursor-glow');
+
+document.addEventListener('mousemove', (e) => {
+  if (glow) {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  }
+});
+
+let mouseX = 0, mouseY = 0;
+let glowX = 0, glowY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateGlow() {
+  glowX += (mouseX - glowX) * 0.1;
+  glowY += (mouseY - glowY) * 0.1;
+
+  glow.style.left = glowX + 'px';
+  glow.style.top = glowY + 'px';
+
+  requestAnimationFrame(animateGlow);
+}
+
+animateGlow();
